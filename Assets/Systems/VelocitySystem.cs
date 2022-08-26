@@ -6,41 +6,36 @@ public class VelocitySystem : ISystem
 {
     public VelocitySystem()
     {
-            SystemEventManager.GetInstance().Subscribe("accelerate", Accelerate);
+            SystemEventManager.Instance.Subscribe(Constants.AccelerateAction, Accelerate);
     }
     
     // Update is called once per frame
     public void Update()
     {
-        foreach (var entity in EntityManager.GetInstance().GetAllEntities())
+        foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var velocityComponent = ComponentManager.GetInstance().GetComponent<VelocityComponent>(entity.EntityId);
-            if (velocityComponent != null)
+            var velocityComponent = ComponentManager.Instance.GetComponent<VelocityComponent>(entity.EntityId);
+            if (velocityComponent == null) continue;
+            if (!Utilities.IsNegative(velocityComponent.Velocity + velocityComponent.Acceleration))
+                velocityComponent.Velocity += velocityComponent.Acceleration;
+            else
+                velocityComponent.Velocity = 0;
+            if (!Utilities.IsNegative(velocityComponent.Acceleration))
             {
-                if (velocityComponent.Velocity >= 0)
-                    velocityComponent.Velocity += velocityComponent.Acceleration;
-                else
-                    velocityComponent.Velocity = 0;
-                /*if (velocityComponent.Acceleration > 0)
-                {
-                    velocityComponent.Acceleration = -velocityComponent.Acceleration;
-                }*/
+                velocityComponent.Acceleration = -velocityComponent.Acceleration;
             }
         }
-
-        SystemEventManager.GetInstance().Trigger("move");
     }
 
     private void Accelerate()
     {
-        foreach (var entity in EntityManager.GetInstance().GetAllEntities())
+        foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var velocityComponent = ComponentManager.GetInstance().GetComponent<VelocityComponent>(entity.EntityId);
-            if (velocityComponent != null)
+            var velocityComponent = ComponentManager.Instance.GetComponent<VelocityComponent>(entity.EntityId);
+            if (velocityComponent == null) continue;
+            if (Utilities.IsNegative(velocityComponent.Acceleration))
             {
-                if(velocityComponent.Acceleration < 0)
-                    ComponentManager.GetInstance().GetComponent<VelocityComponent>(entity.EntityId).Acceleration
-                        = -velocityComponent.Acceleration;
+                velocityComponent.Acceleration = -velocityComponent.Acceleration;
             }
         }
     }

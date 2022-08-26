@@ -5,33 +5,29 @@ using UnityEngine;
 
 public class InputSystem : ISystem
 {
-    public InputSystem()
-    {
-        EntityManager.GetInstance().CreateEntity<InputEntity>("inputEntity");
-    }
-
     // Update is called once per frame
     public void Update()
     {
-        foreach (var entity in EntityManager.GetInstance().GetAllEntities())
+        foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var inputComponent = ComponentManager.GetInstance().GetComponent<InputComponent>(entity.EntityId);
-            if (inputComponent is {Input: { }})
+            var inputComponent = ComponentManager.Instance.GetComponent<InputComponent>(entity.EntityId);
+            if (inputComponent != null && Utilities.IsEmpty(inputComponent.Inputs))
             {
-                SystemEventManager.GetInstance().Trigger(
-                    ComponentManager.GetInstance().GetComponent<InputComponent>(entity.EntityId).Input);
-                ComponentManager.GetInstance().GetComponent<InputComponent>(entity.EntityId).Input = null;
+                foreach (var input in inputComponent.Inputs)
+                {
+                    SystemEventManager.Instance.Trigger(input);
+                    inputComponent.Inputs.Remove(input);
+                }
             }
-
         }
     }
 
     public void AddInput(string input)
     {
-        foreach (var entity in EntityManager.GetInstance().GetAllEntities())
+        foreach (var entity in EntityManager.Instance.GetAll())
         {
-            if(ComponentManager.GetInstance().GetComponent<InputComponent>(entity.EntityId) != null)
-                ComponentManager.GetInstance().GetComponent<InputComponent>(entity.EntityId).Input = input;   
+            var inputComponent = ComponentManager.Instance.GetComponent<InputComponent>(entity.EntityId);
+            inputComponent?.Inputs.Add(input);
         }
     }
 }
