@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputComponent : IComponent
+public class BulletComponent : Component
 {
-    public string Input;
+    public float LifeTime;
 }

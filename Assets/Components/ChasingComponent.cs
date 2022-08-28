@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Component : IComponent
+public class ChasingComponent : Component
 {
-    public Entity Owner;
+    public Entity Target;
 }
