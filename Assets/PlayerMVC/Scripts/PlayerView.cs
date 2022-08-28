@@ -59,8 +59,19 @@ public class PlayerView : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerCoordinatesText.text = Utilities.GetPlayerCoordinatesText(Constants.BaseCoordinates2DValue);
-        _playerAngleText.text = Constants.PlayerAngleText + $"{Constants.FloatZero:0.#}";
-        _playerVelocityText.text = Constants.PlayerVelocityText + $"{Constants.FloatZero:0.#}";
+        if (_playerCoordinatesText != null)
+        {
+            _playerCoordinatesText.text = Utilities.GetPlayerCoordinatesText(Constants.BaseCoordinates2DValue);
+        }
+
+        if (_playerAngleText != null)
+        {
+            _playerAngleText.text = Constants.PlayerAngleText + $"{Constants.FloatZero:0.#}";
+        }
+
+        if (_playerVelocityText != null)
+        {
+            _playerVelocityText.text = Constants.PlayerVelocityText + $"{Constants.FloatZero:0.#}";
+        }
     }
 }

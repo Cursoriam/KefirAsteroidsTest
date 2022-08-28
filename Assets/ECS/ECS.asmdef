@@ -1,0 +1,16 @@
+{
+    "name": "ECS",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2efc1abd81bb1364c97568c142c95af4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

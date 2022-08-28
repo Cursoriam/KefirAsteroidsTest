@@ -299,10 +299,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a459e01619c3a954d9591dacabc1c5ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerPrefab: {fileID: 7413440626930201287, guid: 4bce804f6b981df4988656aa1fea7f4e, type: 3}
-  _bigAsteroidPrefab: {fileID: 3859888023816175739, guid: 499a8b12b5f60a340be1c9b300c42a62, type: 3}
-  _littleAsteroidPrefab: {fileID: 3478114428385775494, guid: 267e188348c78a84896165759a43fad5, type: 3}
-  _ufoPrefab: {fileID: 2499823950747037875, guid: 889c5bf188680dd43b0a4608e19c6af9, type: 3}
+  playerPrefab: {fileID: 7413440626930201287, guid: 4bce804f6b981df4988656aa1fea7f4e, type: 3}
+  bigAsteroidPrefab: {fileID: 3859888023816175739, guid: 499a8b12b5f60a340be1c9b300c42a62, type: 3}
+  littleAsteroidPrefab: {fileID: 3478114428385775494, guid: 267e188348c78a84896165759a43fad5, type: 3}
+  ufoPrefab: {fileID: 2499823950747037875, guid: 889c5bf188680dd43b0a4608e19c6af9, type: 3}
   bullet: {fileID: 2635878935848810082, guid: 19b91d79d69bfe34ea9caf5273bed531, type: 3}
   laser: {fileID: 4058395864120307709, guid: 588ba5ddfad03084eb5df0bcfcc5d01b, type: 3}
   uiElementsBeforeGameStarted: {fileID: 1956980554}
