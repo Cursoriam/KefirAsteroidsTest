@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-
 public class ComponentManager
 {
     private static ComponentManager _componentManager;
@@ -26,8 +20,6 @@ public class ComponentManager
     public T GetComponent<T>(string entityId) where T: IComponent
     {
         var entity = EntityManager.Instance.GetEntity(entityId);
-        if(entity != null)
-            return (T)EntityManager.Instance.GetEntity(entityId).GetComponent<T>();
-        return default;
+        return entity != null ? EntityManager.Instance.GetEntity(entityId).GetComponent<T>() : default;
     }
 }

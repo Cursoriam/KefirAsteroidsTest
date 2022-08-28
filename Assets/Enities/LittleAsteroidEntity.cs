@@ -3,7 +3,7 @@ using Random = System.Random;
 
 public class LittleAsteroidEntity : AsteroidEntity
 {
-    public LittleAsteroidEntity(): base(){}
+    public LittleAsteroidEntity() {}
 
     public LittleAsteroidEntity(string entityId) : base(entityId)
     {

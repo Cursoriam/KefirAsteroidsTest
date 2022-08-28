@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class ShootSystem : ISystem
 {
-    public Action<string, Coordinates2D, float> CreateBullet;
+    public Action<string, Coordinates2D, float> BulletCreatedAction;
     public ShootSystem()
     {
         SystemEventManager.Instance.Subscribe(Constants.ShootAction, Shoot);
@@ -17,10 +14,10 @@ public class ShootSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var shootableComponent = ComponentManager.Instance.GetComponent<BulletComponent>(entity.EntityId);
-            if (shootableComponent == null) continue;
-            shootableComponent.LifeTime += Constants.UpdateStep;
-            if (shootableComponent.LifeTime <= Constants.BulletLifeTime) continue;
+            var bulletComponent = ComponentManager.Instance.GetComponent<BulletComponent>(entity.EntityId);
+            if (bulletComponent == null) continue;
+            bulletComponent.LifeTime += Constants.UpdateStep;
+            if (bulletComponent.LifeTime <= Constants.BulletLifeTime) continue;
             
             var destructibleComponent = ComponentManager.Instance.
                 GetComponent<DestructibleComponent>(entity.EntityId);
@@ -48,7 +45,7 @@ public class ShootSystem : ISystem
             if (entityTransformComponent == null || bulletTransformComponent == null) continue;
             bulletTransformComponent.Position = entityTransformComponent.Position;
             bulletTransformComponent.Angle = entityTransformComponent.Angle;
-            CreateBullet?.Invoke(newBulletName, bulletTransformComponent.Position, bulletTransformComponent.Angle);
+            BulletCreatedAction?.Invoke(newBulletName, bulletTransformComponent.Position, bulletTransformComponent.Angle);
         }
     }
 

@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-
 public class PlayerPresenter
 {
-    private PlayerView _playerView;
-    private PlayerModel _playerModel;
+    private readonly PlayerView _playerView;
+    private readonly PlayerModel _playerModel;
 
     public PlayerPresenter(PlayerView playerView, PlayerModel playerModel)
     {

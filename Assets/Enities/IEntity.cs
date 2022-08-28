@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public interface IEntity
 {
     public void AddComponent(IComponent component);

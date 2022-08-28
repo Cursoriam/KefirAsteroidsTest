@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using Unity.VisualScripting;
-using UnityEngine;
 
-public class Constants
+public static class Constants
 {
     //Constants
     public const float FloatComparisionPrecision = 0.0001f;

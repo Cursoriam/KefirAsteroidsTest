@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class PlayerModel
 {
@@ -10,8 +7,8 @@ public class PlayerModel
     
     public PlayerModel()
     {
-        SystemManager.Instance.GetSystem<TransformSystem>().PlayerTransformChanged += GetPlayerTransform;
-        SystemManager.Instance.GetSystem<VelocitySystem>().PlayerVelocityChangedAction += GetPlayerVelocity;
+        SystemManager.Instance.GetSystem<TransformSystem>().PlayerTransformChangedAction += PlayerTransformChanged;
+        SystemManager.Instance.GetSystem<VelocitySystem>().PlayerVelocityChangedAction += PlayerVelocityChanged;
     }
     
     public void SendInput(string input)
@@ -19,12 +16,12 @@ public class PlayerModel
         SystemManager.Instance.GetSystem<InputSystem>().AddInput(input);
     }
 
-    private void GetPlayerTransform(Coordinates2D position, float angle)
+    private void PlayerTransformChanged(Coordinates2D position, float angle)
     {
         GetPlayerTransformAction?.Invoke(position, angle);
     }
 
-    private void GetPlayerVelocity(float velocity)
+    private void PlayerVelocityChanged(float velocity)
     {
         GetPlayerVelocityAction?.Invoke(velocity);
     }

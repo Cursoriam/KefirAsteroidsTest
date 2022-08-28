@@ -1,23 +1,20 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class GameModel
 {
     public Action<string, Coordinates2D, Coordinates2D, float> ChangedTransformOfObjectAction;
-    public Action<string> DestroyObjectAction;
+    public Action<string> ObjectDestroyedAction;
     public Action<string, Coordinates2D, float> CreatedBigAsteroidAction;
     public Action<string, Coordinates2D, float> CreatedLittleAsteroidAction;
     public Action<Coordinates2D> CreatedUfoAction;
-    public Action<string, Coordinates2D, float> BulletEntityCreated;
-    public Action<Coordinates2D, float> CreateLaserAction;
+    public Action<string, Coordinates2D, float> BulletEntityCreatedAction;
+    public Action<Coordinates2D, float> LaserCreatedAction;
     public Action CreatedPlayerAction;
     public Action<int> LaserNumberOfShootsChangedAction;
     public Action<float> LaserReloadTimeChangedAction;
     public Action<int> SendScoreAction;
     public Action GameOverAction;
-    private int _score = 0;
+    private int _score;
     private GameState _gameState = GameState.None;
     
     // Update is called once per frame
@@ -29,44 +26,44 @@ public class GameModel
         }
     }
 
-    public void DestroyObjectOnScene(string name)
+    private void EntityDestroyed(string name)
     {
-        DestroyObjectAction?.Invoke(name);
+        ObjectDestroyedAction?.Invoke(name);
     }
 
-    public void CreatedBigAsteroid(string name)
+    private void CreatedBigAsteroid(string name)
     {
         var transform = ComponentManager.Instance.GetComponent<TransformComponent>(name);
         CreatedBigAsteroidAction?.Invoke(name, transform.Position, transform.Angle);
     }
 
-    public void CreateLittleAsteroid(string name, Coordinates2D position)
+    private void CreatedLittleAsteroid(string name, Coordinates2D position)
     {
         var transform = ComponentManager.Instance.GetComponent<TransformComponent>(name);
         CreatedLittleAsteroidAction?.Invoke(name, transform.Position, transform.Angle);
     }
 
-    public void CreatedUFO(Coordinates2D position)
+    private void CreatedUfo(Coordinates2D position)
     {
         CreatedUfoAction?.Invoke(position);
     }
-    
-    public void CreateBullet(string name, Coordinates2D position, float angle)
+
+    private void CreatedBullet(string name, Coordinates2D position, float angle)
     {
-        BulletEntityCreated?.Invoke(name, position, angle);
+        BulletEntityCreatedAction?.Invoke(name, position, angle);
     }
 
-    public void CreateLaser(Coordinates2D position, float angle)
+    private void CreatedLaser(Coordinates2D position, float angle)
     {
-        CreateLaserAction?.Invoke(position, angle);
+        LaserCreatedAction?.Invoke(position, angle);
     }
 
-    private void ChangeTransformOfObject(string name, Coordinates2D transform, Coordinates2D size, float angle)
+    private void TransformChanged(string name, Coordinates2D transform, Coordinates2D size, float angle)
     {
         ChangedTransformOfObjectAction?.Invoke(name, transform, size, angle);
     }
     
-    private void LaserNumberOfChargesChanged(int charges)
+    private void LaserChargesCountChanged(int charges)
     {
         LaserNumberOfShootsChangedAction?.Invoke(charges);
     }
@@ -76,13 +73,13 @@ public class GameModel
         LaserReloadTimeChangedAction?.Invoke(reloadTime);
     }
 
-    private void SendScore(int score)
+    private void ScoreSent(int score)
     {
         _score += score;
         SendScoreAction?.Invoke(_score);
     }
 
-    private void GameOver()
+    private void PlayerDestroyed()
     {
         GameOverAction?.Invoke();
     }
@@ -114,17 +111,18 @@ public class GameModel
         SystemManager.Instance.AddSystem(new ChaseSystem());
         SystemManager.Instance.AddSystem(new DestructionSystem());
 
-        SystemManager.Instance.GetSystem<TransformSystem>().TransformChanged += ChangeTransformOfObject;
-        SystemManager.Instance.GetSystem<EnemySpawnSystem>().BigAsteroidCreated += CreatedBigAsteroid;
-        SystemManager.Instance.GetSystem<EnemySpawnSystem>().LittleAsteroidCreated += CreateLittleAsteroid;
-        SystemManager.Instance.GetSystem<EnemySpawnSystem>().UfoCreated += CreatedUFO;
-        SystemManager.Instance.GetSystem<ShootSystem>().CreateBullet += CreateBullet;
-        SystemManager.Instance.GetSystem<LaserSystem>().LaserShot += CreateLaser;
-        SystemManager.Instance.GetSystem<DestructionSystem>().DestroyEntity += DestroyObjectOnScene;
-        SystemManager.Instance.GetSystem<LaserSystem>().LaserChargesCountChanged += LaserNumberOfChargesChanged;
-        SystemManager.Instance.GetSystem<LaserSystem>().LaserReloadTimeChanged += LaserReloadTimeChanged;
-        SystemManager.Instance.GetSystem<DestructionSystem>().PlayerDestroyedAction += GameOver;
-        SystemManager.Instance.GetSystem<DestructionSystem>().SendScore += SendScore;
+        SystemManager.Instance.GetSystem<TransformSystem>().TransformChangedAction += TransformChanged;
+        SystemManager.Instance.GetSystem<EnemySpawnSystem>().BigAsteroidCreatedAction += CreatedBigAsteroid;
+        SystemManager.Instance.GetSystem<EnemySpawnSystem>().LittleAsteroidCreatedAction += CreatedLittleAsteroid;
+        SystemManager.Instance.GetSystem<EnemySpawnSystem>().UfoCreatedAction += CreatedUfo;
+        SystemManager.Instance.GetSystem<ShootSystem>().BulletCreatedAction += CreatedBullet;
+        SystemManager.Instance.GetSystem<LaserSystem>().LaserShotAction += CreatedLaser;
+        SystemManager.Instance.GetSystem<DestructionSystem>().EntityDestroyedAction += EntityDestroyed;
+        SystemManager.Instance.GetSystem<LaserSystem>().LaserChargesCountChangedAction += LaserChargesCountChanged;
+        SystemManager.Instance.GetSystem<LaserSystem>().LaserReloadTimeChangedAction += LaserReloadTimeChanged;
+        SystemManager.Instance.GetSystem<DestructionSystem>().PlayerDestroyedAction += PlayerDestroyed;
+        SystemManager.Instance.GetSystem<DestructionSystem>().ScoreSentAction += ScoreSent;
+        
         EntityManager.Instance.CreateEntity<PlayerEntity>(Constants.PlayerEntityName);
         CreatedPlayerAction?.Invoke();
         SystemManager.Instance.GetSystem<EnemySpawnSystem>().CreateBigAsteroid();

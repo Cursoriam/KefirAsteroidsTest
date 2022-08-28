@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class SystemEventManager
 {
     private static SystemEventManager _systemEventManager;
-    private Dictionary<string, Action> _eventDictionary;
+    private readonly Dictionary<string, Action> _eventDictionary;
 
     private SystemEventManager()
     {

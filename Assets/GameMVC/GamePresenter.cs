@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
 public class GamePresenter
 {
-    private GameView _gameView;
+    private readonly GameView _gameView;
 
-    private GameModel _gameModel;
+    private readonly GameModel _gameModel;
 
     public GamePresenter(GameView gameView, GameModel gameModel)
     {
@@ -19,15 +14,15 @@ public class GamePresenter
     private void Enable()
     {
         _gameView.GameUpdateAction += GameUpdate;
-        _gameModel.DestroyObjectAction += DestroyObject;
+        _gameModel.ObjectDestroyedAction += DestroyObject;
         _gameModel.CreatedBigAsteroidAction += CreateBigAsteroid;
         _gameModel.CreatedLittleAsteroidAction += CreateLittleAsteroid;
-        _gameModel.CreatedUfoAction += CreateUFO;
-        _gameModel.BulletEntityCreated += BulletCreated;
-        _gameModel.CreateLaserAction += CreateLaser;
+        _gameModel.CreatedUfoAction += CreateUfo;
+        _gameModel.BulletEntityCreatedAction += CreateBullet;
+        _gameModel.LaserCreatedAction += CreateLaser;
         _gameModel.ChangedTransformOfObjectAction += ChangeTransformOfGameObject;
-        _gameModel.CreatedPlayerAction += PlayerCreated;
-        _gameModel.LaserNumberOfShootsChangedAction += LaserNumberOfShootsChangeText;
+        _gameModel.CreatedPlayerAction += CreatePlayer;
+        _gameModel.LaserNumberOfShootsChangedAction += ChangeLaserChargesCountText;
         _gameModel.LaserReloadTimeChangedAction += ChangeLaserReloadTime;
         _gameModel.SendScoreAction += IncreaseScore;
         _gameModel.GameOverAction += OverGame;
@@ -60,12 +55,12 @@ public class GamePresenter
         _gameView.CreateLittleAsteroid(name, position, angle);
     }
 
-    private void CreateUFO(Coordinates2D position)
+    private void CreateUfo(Coordinates2D position)
     {
         _gameView.CreateUfo(position);
     }
     
-    private void BulletCreated(string name, Coordinates2D position, float angle)
+    private void CreateBullet(string name, Coordinates2D position, float angle)
     {
         _gameView.CreateBullet(name, position, angle);
     }
@@ -75,7 +70,7 @@ public class GamePresenter
         _gameView.CreateLaser(position, angle);
     }
 
-    private void PlayerCreated()
+    private void CreatePlayer()
     {
         _gameView.CreatePlayer();
     }
@@ -85,7 +80,7 @@ public class GamePresenter
         _gameModel.StartGame();
     }
     
-    private void LaserNumberOfShootsChangeText(int chargesCount)
+    private void ChangeLaserChargesCountText(int chargesCount)
     {
         _gameView.ChangeLaserChargesCount(chargesCount);
     }

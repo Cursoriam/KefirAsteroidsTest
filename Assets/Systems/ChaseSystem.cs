@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class ChaseSystem : ISystem
 {
@@ -10,19 +7,19 @@ public class ChaseSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var chasableComponent = ComponentManager.Instance.GetComponent<ChasingComponent>(entity.EntityId);
-            if (!(chasableComponent is {Target: { }})) continue;
+            var chasingComponent = ComponentManager.Instance.GetComponent<ChasingComponent>(entity.EntityId);
+            if (!(chasingComponent is {Target: { }})) continue;
             var transformComponent = ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId);
             var targetTransformComponent =
-                ComponentManager.Instance.GetComponent<TransformComponent>(chasableComponent.Target.EntityId);
+                ComponentManager.Instance.GetComponent<TransformComponent>(chasingComponent.Target.EntityId);
 
             if (transformComponent == null || targetTransformComponent == null) continue;
-            var roatationableComponent = ComponentManager.Instance
+            var rotatingComponent = ComponentManager.Instance
                 .GetComponent<RotatingComponent>(entity.EntityId);
 
-            if (roatationableComponent != null)
+            if (rotatingComponent != null)
             {
-                roatationableComponent.RotationAngle = Utilities.RadiansToDegrees((float)Math.Atan2(
+                rotatingComponent.RotationAngle = Utilities.RadiansToDegrees((float)Math.Atan2(
                     targetTransformComponent.Position.Y - transformComponent.Position.Y, 
                     targetTransformComponent.Position.X - transformComponent.Position.X));
             }

@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerEntity : Entity
 {
-    public PlayerEntity(): base(){}
+    public PlayerEntity() {}
     public PlayerEntity(string entityId) : base(entityId)
     {
         Components.Add(new TransformComponent{Size = Constants.PlayerSize});

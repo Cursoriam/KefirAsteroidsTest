@@ -1,6 +1,6 @@
 public class UfoEntity : Entity
 {
-    public UfoEntity(): base(){}
+    public UfoEntity() {}
 
     public UfoEntity(string entityId) : base(entityId)
     {

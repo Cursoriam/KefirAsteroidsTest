@@ -29,7 +29,7 @@ public struct Coordinates2D : IEquatable<Coordinates2D>
     {
         unchecked
         {
-            int hashCode = X.GetHashCode();
+            var hashCode = X.GetHashCode();
             hashCode = (hashCode * 397) ^ Y.GetHashCode();
             return hashCode;
         }

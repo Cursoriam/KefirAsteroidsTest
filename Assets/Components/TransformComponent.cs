@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class TransformComponent : IComponent
 {
     public  Coordinates2D Position;

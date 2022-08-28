@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class DestructionSystem : ISystem
 {
-    public Action<string> DestroyEntity;
+    public Action<string> EntityDestroyedAction;
     public Action PlayerDestroyedAction;
-    public Action<int> SendScore;
+    public Action<int> ScoreSentAction;
     
     // Update is called once per frame
     public void Update()
@@ -23,9 +19,9 @@ public class DestructionSystem : ISystem
                 var enemyComponent = ComponentManager.Instance.GetComponent<EnemyComponent>(entity.EntityId);
                 
                 if(enemyComponent != null)
-                    SendScore?.Invoke(enemyComponent.Score);
+                    ScoreSentAction?.Invoke(enemyComponent.Score);
                 
-                DestroyEntity?.Invoke(entity.EntityId);
+                EntityDestroyedAction?.Invoke(entity.EntityId);
                 if (playerComponent != null)
                 {
                     PlayerDestroyedAction?.Invoke();
@@ -47,7 +43,7 @@ public class DestructionSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            DestroyEntity?.Invoke(entity.EntityId);
+            EntityDestroyedAction?.Invoke(entity.EntityId);
             EntityManager.Instance.RemoveEntity(entity.EntityId);
         }
     }

@@ -2,7 +2,7 @@ using Random = System.Random;
 
 public class BigAsteroidEntity : AsteroidEntity
 {
-    public BigAsteroidEntity(): base(){}
+    public BigAsteroidEntity() {}
 
     public BigAsteroidEntity(string entityId) : base(entityId)
     {

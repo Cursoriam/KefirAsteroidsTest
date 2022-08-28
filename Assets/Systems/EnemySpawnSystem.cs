@@ -1,17 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Random = System.Random;
 
 public class EnemySpawnSystem : ISystem
 {
     private float _asteroidsTimeElapsed;
     private float _ufoTimeElapsed;
-    public Action<string> BigAsteroidCreated;
-    public Action<string, Coordinates2D> LittleAsteroidCreated;
-    public Action<Coordinates2D> UfoCreated;
+    public Action<string> BigAsteroidCreatedAction;
+    public Action<string, Coordinates2D> LittleAsteroidCreatedAction;
+    public Action<Coordinates2D> UfoCreatedAction;
     
     // Update is called once per frame
     public void Update()
@@ -68,7 +64,7 @@ public class EnemySpawnSystem : ISystem
                 ComponentManager.Instance.GetComponent<TransformComponent>(Constants.UfoEntityName);
             if (ufoTransformComponent != null)
             {
-                UfoCreated?.Invoke(ufoTransformComponent.Position);
+                UfoCreatedAction?.Invoke(ufoTransformComponent.Position);
             }
         }
 
@@ -112,7 +108,7 @@ public class EnemySpawnSystem : ISystem
         var newAsteroidName = Constants.AsteroidEntityName + CalculateNumberToCreateAsteroid();
         EntityManager.Instance.CreateEntity<BigAsteroidEntity>(newAsteroidName);
         SetPosition(EntityManager.Instance.GetEntity(newAsteroidName));
-        BigAsteroidCreated?.Invoke(newAsteroidName);
+        BigAsteroidCreatedAction?.Invoke(newAsteroidName);
     }
 
     private void CreateLittleAsteroid(Coordinates2D position)
@@ -126,7 +122,7 @@ public class EnemySpawnSystem : ISystem
         {
             transformComponent.Position = position;
         }
-        LittleAsteroidCreated?.Invoke(newAsteroidName, position);
+        LittleAsteroidCreatedAction?.Invoke(newAsteroidName, position);
     }
 
     public void ResetVariables()

@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using UnityEngine;
 
 public class InterSectionSystem : ISystem
 {
@@ -18,14 +15,14 @@ public class InterSectionSystem : ISystem
             {
                 foreach (var otherEntity in EntityManager.Instance.GetAll())
                 {
-                    var shootableComponent = ComponentManager.Instance
+                    var bulletComponent = ComponentManager.Instance
                         .GetComponent<BulletComponent>(otherEntity.EntityId);
                     var laserComponent = ComponentManager.Instance
                         .GetComponent<LaserComponent>(otherEntity.EntityId);
                     var playerComponent = ComponentManager.Instance
                         .GetComponent<PlayerComponent>(otherEntity.EntityId);
 
-                    if (shootableComponent != null)
+                    if (bulletComponent != null)
                     {
                         if (InterSectsWith(entity, otherEntity))
                         {
@@ -89,13 +86,13 @@ public class InterSectionSystem : ISystem
                                 playerDestructibleComponent.NeedToDestroy = true;
                             }
 
-                            var chasableComponent =
+                            var chasingComponent =
                                 ComponentManager.Instance.GetComponent<ChasingComponent>(entity.EntityId);
 
                             var enemyDestructibleComponent =
                                 ComponentManager.Instance.GetComponent<DestructibleComponent>(entity.EntityId);
 
-                            if (chasableComponent != null && enemyDestructibleComponent != null)
+                            if (chasingComponent != null && enemyDestructibleComponent != null)
                             {
                                 enemyDestructibleComponent.NeedToDestroy = true;
                             }

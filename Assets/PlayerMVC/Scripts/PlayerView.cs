@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +13,7 @@ public class PlayerView : MonoBehaviour
     private Text _playerVelocityText;
     
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _playerView = GetComponent<PlayerView>();
         _playerModel = new PlayerModel();
@@ -25,8 +22,8 @@ public class PlayerView : MonoBehaviour
         _playerAngleText = GameObject.Find(Constants.PlayerAngleObjectName).GetComponent<Text>();
         _playerVelocityText = GameObject.Find(Constants.PlayerVelocityTextObjectName).GetComponent<Text>();
     }
-    
-    public void GetInput()
+
+    private void GetInput()
     {
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
             SendInput?.Invoke(Constants.AccelerateAction);

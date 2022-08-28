@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class LaserEntity : Entity
 {
-    public LaserEntity(): base(){}
+    public LaserEntity() {}
 
     public LaserEntity(string entityId): base(entityId)
     {

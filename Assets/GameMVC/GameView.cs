@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,10 +10,10 @@ public class GameView : MonoBehaviour
     private GameView _gameView;
     private GamePresenter _gamePresenter;
     private GameModel _gameModel;
-    [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _bigAsteroidPrefab;
-    [SerializeField] private GameObject _littleAsteroidPrefab;
-    [SerializeField] private GameObject _ufoPrefab;
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject bigAsteroidPrefab;
+    [SerializeField] private GameObject littleAsteroidPrefab;
+    [SerializeField] private GameObject ufoPrefab;
     [SerializeField] private GameObject bullet;
     [SerializeField] private GameObject laser;
     [SerializeField] private GameObject uiElementsBeforeGameStarted;
@@ -54,17 +50,20 @@ public class GameView : MonoBehaviour
 
     private void InitializeVariables()
     {
-        Constants.ScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,
-            Screen.height)).x;
-        Constants.ScreenHeight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,
-            Screen.height)).y;
-        
-        Constants.PlayerSize = GetSpriteSize(_playerPrefab);
+        if (Camera.main is { })
+        {
+            Constants.ScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,
+                Screen.height)).x;
+            Constants.ScreenHeight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,
+                Screen.height)).y;
+        }
+
+        Constants.PlayerSize = GetSpriteSize(playerPrefab);
         Constants.BulletSize = GetSpriteSize(bullet);
         Constants.LaserSize = GetSpriteSize(laser.GetComponent<Transform>().GetChild(0).gameObject);
-        Constants.BigAsteroidSize = GetSpriteSize(_bigAsteroidPrefab);
-        Constants.LittleAsteroidSize = GetSpriteSize(_littleAsteroidPrefab);
-        Constants.UfoSize = GetSpriteSize(_ufoPrefab);
+        Constants.BigAsteroidSize = GetSpriteSize(bigAsteroidPrefab);
+        Constants.LittleAsteroidSize = GetSpriteSize(littleAsteroidPrefab);
+        Constants.UfoSize = GetSpriteSize(ufoPrefab);
     }
     
     private Coordinates2D GetSpriteSize(GameObject prefab)
@@ -94,21 +93,21 @@ public class GameView : MonoBehaviour
         gameObjectWithName.transform.rotation = Quaternion.Euler(Constants.FloatZero, Constants.FloatZero, angle);
     }
     
-    public void DestroyObjectOnScene(string name)
+    public void DestroyObjectOnScene(string gameObjectName)
     {
-        Destroy(GameObject.Find(name));
+        Destroy(GameObject.Find(gameObjectName));
     }
 
     public void CreatePlayer()
     {
-        var player = Instantiate(_playerPrefab);
+        var player = Instantiate(playerPrefab);
         player.name = player.name.Replace("(Clone)", "");
     }
 
     public void CreateBigAsteroid(string asteroidName, Coordinates2D position, float angle)
     {
-        _bigAsteroidPrefab.name = asteroidName;
-        var asteroid = Instantiate(_bigAsteroidPrefab, new Vector3(position.X, position.Y),
+        bigAsteroidPrefab.name = asteroidName;
+        var asteroid = Instantiate(bigAsteroidPrefab, new Vector3(position.X, position.Y),
             Quaternion.identity);
         asteroid.name = asteroid.name.Replace("(Clone)", "");
         asteroid.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle);
@@ -116,8 +115,8 @@ public class GameView : MonoBehaviour
 
     public void CreateLittleAsteroid(string asteroidName, Coordinates2D position, float angle)
     {
-        _littleAsteroidPrefab.name = asteroidName;
-        var asteroid = Instantiate(_littleAsteroidPrefab, new Vector3(position.X, position.Y),
+        littleAsteroidPrefab.name = asteroidName;
+        var asteroid = Instantiate(littleAsteroidPrefab, new Vector3(position.X, position.Y),
             Quaternion.identity);
         asteroid.name = asteroid.name.Replace("(Clone)", "");
         asteroid.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle);
@@ -125,7 +124,7 @@ public class GameView : MonoBehaviour
 
     public void CreateUfo(Coordinates2D position)
     {
-        var ufo = Instantiate(_ufoPrefab, new Vector2(position.X, position.Y),
+        var ufo = Instantiate(ufoPrefab, new Vector2(position.X, position.Y),
             Quaternion.identity);
         ufo.name = Constants.UfoEntityName;
     }

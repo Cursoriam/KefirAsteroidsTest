@@ -1,10 +1,9 @@
 using System;
-using UnityEngine;
 
 public class TransformSystem : ISystem
 {
-    public Action<string, Coordinates2D, Coordinates2D, float> TransformChanged;
-    public Action<Coordinates2D, float> PlayerTransformChanged;
+    public Action<string, Coordinates2D, Coordinates2D, float> TransformChangedAction;
+    public Action<Coordinates2D, float> PlayerTransformChangedAction;
     
     // Update is called once per frame
     public void Update()
@@ -13,37 +12,35 @@ public class TransformSystem : ISystem
         {
             var transformComponent = ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId);
             var velocityComponent = ComponentManager.Instance.GetComponent<VelocityComponent>(entity.EntityId);
-            
-            if (velocityComponent != null && transformComponent != null)
+
+            if (velocityComponent == null || transformComponent == null) continue;
+            var rotatingComponent =
+                ComponentManager.Instance.GetComponent<RotatingComponent>(entity.EntityId);
+            if (rotatingComponent != null)
             {
-                var rotationableComponent =
-                    ComponentManager.Instance.GetComponent<RotatingComponent>(entity.EntityId);
-                if (rotationableComponent != null)
-                {
-                    transformComponent.Position.X += velocityComponent.Velocity * 
-                                                     (float) Math.Cos(Utilities.DegreesToRadians(
-                                                         rotationableComponent.RotationAngle));
-                    transformComponent.Position.Y += velocityComponent.Velocity * 
-                                                     (float) Math.Sin(Utilities.DegreesToRadians(
-                                                         rotationableComponent.RotationAngle));
-                }
-                else
-                {
-                    transformComponent.Position.X += velocityComponent.Velocity *
-                                                     (float) Math.Cos(Utilities.DegreesToRadians(
-                                                         transformComponent.Angle));
-                    transformComponent.Position.Y += velocityComponent.Velocity * 
-                                                     (float) Math.Sin(Utilities.DegreesToRadians(
-                                                         transformComponent.Angle));
-                }
-                RecalculateTransform(ref transformComponent);
-                TransformChanged?.Invoke(entity.EntityId, transformComponent.Position, transformComponent.Size,
-                    transformComponent.Angle);
-                var playerComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId);
-                if (playerComponent != null)
-                {
-                    PlayerTransformChanged?.Invoke(transformComponent.Position, transformComponent.Angle);
-                }
+                transformComponent.Position.X += velocityComponent.Velocity * 
+                                                 (float) Math.Cos(Utilities.DegreesToRadians(
+                                                     rotatingComponent.RotationAngle));
+                transformComponent.Position.Y += velocityComponent.Velocity * 
+                                                 (float) Math.Sin(Utilities.DegreesToRadians(
+                                                     rotatingComponent.RotationAngle));
+            }
+            else
+            {
+                transformComponent.Position.X += velocityComponent.Velocity *
+                                                 (float) Math.Cos(Utilities.DegreesToRadians(
+                                                     transformComponent.Angle));
+                transformComponent.Position.Y += velocityComponent.Velocity * 
+                                                 (float) Math.Sin(Utilities.DegreesToRadians(
+                                                     transformComponent.Angle));
+            }
+            RecalculateTransform(ref transformComponent);
+            TransformChangedAction?.Invoke(entity.EntityId, transformComponent.Position, transformComponent.Size,
+                transformComponent.Angle);
+            var playerComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId);
+            if (playerComponent != null)
+            {
+                PlayerTransformChangedAction?.Invoke(transformComponent.Position, transformComponent.Angle);
             }
         }
     }

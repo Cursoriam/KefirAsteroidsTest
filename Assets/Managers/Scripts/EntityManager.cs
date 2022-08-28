@@ -1,13 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine;
 
 public class EntityManager
 {
     private static EntityManager _entityManager;
-    private Dictionary<string, Entity> _entities;
+    private readonly Dictionary<string, Entity> _entities;
     
     public static EntityManager Instance
     {

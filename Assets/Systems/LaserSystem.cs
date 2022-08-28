@@ -1,18 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using UnityEngine.UIElements;
 
 public class LaserSystem : ISystem
 {
-    public Action<Coordinates2D, float> LaserTransformChanged;
-    public Action<int> LaserChargesCountChanged;
-    public Action<float> LaserReloadTimeChanged;
+    public Action<Coordinates2D, float> LaserTransformChangedAction;
+    public Action<int> LaserChargesCountChangedAction;
+    public Action<float> LaserReloadTimeChangedAction;
     private int _numberOfShoots = Constants.NumberOfLaserShoots;
     private float _coolDownTime;
-    public Action<Coordinates2D, float> LaserShot;
+    public Action<Coordinates2D, float> LaserShotAction;
     public LaserSystem()
     {
         SystemEventManager.Instance.Subscribe(Constants.LaserAction, LaserShoot); 
@@ -50,10 +46,10 @@ public class LaserSystem : ISystem
             else
             {
                 _numberOfShoots++;
-                LaserChargesCountChanged?.Invoke(_numberOfShoots);
+                LaserChargesCountChangedAction?.Invoke(_numberOfShoots);
                 _coolDownTime = Constants.FloatZero;
             }
-            LaserReloadTimeChanged?.Invoke(Constants.LaserReloadTime - _coolDownTime);
+            LaserReloadTimeChangedAction?.Invoke(Constants.LaserReloadTime - _coolDownTime);
         }
     }
 
@@ -78,8 +74,8 @@ public class LaserSystem : ISystem
             laserTransformComponent.Position = Utilities.RotatePoint(laserTransformComponent.Position,
                 playerTransformComponent.Position, laserTransformComponent.Angle);
             _numberOfShoots--;
-            LaserChargesCountChanged?.Invoke(_numberOfShoots);
-            LaserShot?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
+            LaserChargesCountChangedAction?.Invoke(_numberOfShoots);
+            LaserShotAction?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
         }
     }
 
@@ -114,7 +110,7 @@ public class LaserSystem : ISystem
                 laserTransformComponent.Position.Y += laserTransformComponent.Size.Y / Constants.FloatTwo;
                 laserTransformComponent.Position = Utilities.RotatePoint(laserTransformComponent.Position,
                     playerTransformComponent.Position, laserTransformComponent.Angle);
-                LaserTransformChanged?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
+                LaserTransformChangedAction?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
             }
         }
     }

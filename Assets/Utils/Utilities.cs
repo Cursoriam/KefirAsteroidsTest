@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Random = System.Random;
 
-public class Utilities
+public static class Utilities
 {
     /// <summary>
     /// Rotates one point around another
@@ -134,7 +132,7 @@ public class Utilities
 
         for (var i = 0; i < vertices.Count; i++)
         {
-            vertices[i] = Utilities.RotatePoint(vertices[i], position, angle);
+            vertices[i] = RotatePoint(vertices[i], position, angle);
         }
         return vertices;
     }
@@ -142,18 +140,5 @@ public class Utilities
     public static string GetPlayerCoordinatesText(Coordinates2D position)
     {
         return $"Player Coordinates: ({position.X:0.#}, {position.Y:0.#})";
-    }
-    
-    private void DrawPrimitiveConvexHull(Coordinates2D position, Coordinates2D size, float angle)
-    {
-        var vertices = GetPrimitiveConvexHull(position, size, angle);
-        Debug.DrawLine(new Vector2(vertices[0].X, vertices[0].Y), new Vector2(vertices[1].X,
-            vertices[1].Y));
-        Debug.DrawLine(new Vector2(vertices[1].X, vertices[1].Y), new Vector2(vertices[2].X,
-            vertices[2].Y));
-        Debug.DrawLine(new Vector2(vertices[2].X, vertices[2].Y), new Vector2(vertices[3].X,
-            vertices[3].Y));
-        Debug.DrawLine(new Vector2(vertices[3].X, vertices[3].Y), new Vector2(vertices[0].X,
-            vertices[0].Y));
     }
 }
