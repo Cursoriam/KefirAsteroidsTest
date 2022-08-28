@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 public class LaserSystem : ISystem
 {
-    public Action<float> LaserTransformChanged;
+    public Action<Coordinates2D, float> LaserTransformChanged;
     public Action<int> LaserChargesCountChanged;
     public Action<float> LaserReloadTimeChanged;
     private int _numberOfShoots = Constants.NumberOfLaserShoots;
@@ -114,7 +114,7 @@ public class LaserSystem : ISystem
                 laserTransformComponent.Position.Y += laserTransformComponent.Size.Y / Constants.FloatTwo;
                 laserTransformComponent.Position = Utilities.RotatePoint(laserTransformComponent.Position,
                     playerTransformComponent.Position, laserTransformComponent.Angle);
-                LaserTransformChanged?.Invoke(laserTransformComponent.Angle);
+                LaserTransformChanged?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
             }
         }
     }

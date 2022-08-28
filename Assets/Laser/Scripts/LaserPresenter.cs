@@ -21,9 +21,9 @@ public class LaserPresenter
         _laserView.LaserDestroyed += DestroyLaser;
     }
 
-    private void LaserTransformChanged(float angle)
+    private void LaserTransformChanged(Coordinates2D position, float angle)
     {
-        _laserView.ChangeTransform(angle);
+        _laserView.ChangeTransform(position, angle);
     }
     
     private void DestroyLaser()
