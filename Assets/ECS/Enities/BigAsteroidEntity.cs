@@ -6,7 +6,6 @@ public class BigAsteroidEntity : AsteroidEntity
 
     public BigAsteroidEntity(string entityId) : base(entityId)
     {
-        Random = new Random();
         Components.Add(new TransformComponent{Angle = Random.Next(Constants.IntZero,
                 (int)Constants.PIInDegrees), Position = Utilities.CalculateEnemySpawnPosition(),
             Size = Constants.BigAsteroidSize});

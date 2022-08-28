@@ -7,7 +7,6 @@ public class AsteroidEntity : Entity
 
     protected AsteroidEntity(string entityId) : base(entityId)
     {
-        Random = new Random();
         Components.Add(new DestructibleComponent());
     }
 }
