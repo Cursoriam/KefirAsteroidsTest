@@ -8,12 +8,10 @@ public class SystemManager
 {
     private List<ISystem> _systems;
     private static SystemManager _systemManager;
-
-    public static SystemManager GetInstance()
+    
+    public static SystemManager Instance
     {
-        if (_systemManager == null)
-            _systemManager = new SystemManager();
-        return _systemManager;
+        get { return _systemManager ??= new SystemManager(); }
     }
 
     private SystemManager()
@@ -28,7 +26,9 @@ public class SystemManager
 
     public T GetSystem<T>()
     {
-        return (T)_systems.Where(item => item.GetType() == typeof(T)).ToList()[0];
+        if(_systems.Where(item => item.GetType() == typeof(T)).ToList().Count > 0)
+            return (T)_systems.Where(item => item.GetType() == typeof(T)).ToList()[0];
+        return default;
     }
     
     public void RemoveSystem<T>()

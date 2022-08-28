@@ -7,6 +7,9 @@ using UnityEngine.UIElements;
 
 public class LaserSystem : ISystem
 {
+    public Action<float> LaserTransformChanged;
+    public Action<int> LaserChargesCountChanged;
+    public Action<float> LaserReloadTimeChanged;
     private int _numberOfShoots = Constants.NumberOfLaserShoots;
     private float _coolDownTime;
     public Action<Coordinates2D, float> LaserShot;
@@ -33,6 +36,10 @@ public class LaserSystem : ISystem
                         destructibleComponent.NeedToDestroy = true;
                     }
                 }
+                else
+                {
+                    RecalculateLaserTransform(entity.EntityId);
+                }
             }
 
             if (_numberOfShoots >= Constants.NumberOfLaserShoots) continue;
@@ -43,8 +50,10 @@ public class LaserSystem : ISystem
             else
             {
                 _numberOfShoots++;
+                LaserChargesCountChanged?.Invoke(_numberOfShoots);
                 _coolDownTime = Constants.FloatZero;
             }
+            LaserReloadTimeChanged?.Invoke(Constants.LaserReloadTime - _coolDownTime);
         }
     }
 
@@ -69,7 +78,8 @@ public class LaserSystem : ISystem
             laserTransformComponent.Position = Utilities.RotatePoint(laserTransformComponent.Position,
                 playerTransformComponent.Position, laserTransformComponent.Angle);
             _numberOfShoots--;
-            LaserShot?.Invoke(laserTransformComponent.Position, laserTransformComponent.Angle);
+            LaserChargesCountChanged?.Invoke(_numberOfShoots);
+            LaserShot?.Invoke(playerTransformComponent.Position, laserTransformComponent.Angle);
         }
     }
 
@@ -78,5 +88,40 @@ public class LaserSystem : ISystem
         return EntityManager.Instance.GetAll().Select(entity => 
             ComponentManager.Instance.GetComponent<LaserComponent>(entity.EntityId)).Any(laserComponent
             => laserComponent != null);
+    }
+
+    private TransformComponent GetPlayerTransformComponent()
+    {
+        return (from entity in EntityManager.Instance.GetAll() 
+            let playerComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId)
+            where playerComponent != null select 
+                ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId)).
+            FirstOrDefault(transformComponent => transformComponent != null);
+    }
+
+    private void RecalculateLaserTransform(string entityId)
+    {
+        var laserTransformComponent =
+            ComponentManager.Instance.GetComponent<TransformComponent>(entityId);
+        if (laserTransformComponent != null)
+        {
+            var playerTransformComponent = GetPlayerTransformComponent();
+            if (playerTransformComponent != null)
+            {
+                laserTransformComponent.Position = playerTransformComponent.Position;
+                laserTransformComponent.Angle = playerTransformComponent.Angle;
+                laserTransformComponent.Position.X += laserTransformComponent.Size.X / Constants.FloatTwo;
+                laserTransformComponent.Position.Y += laserTransformComponent.Size.Y / Constants.FloatTwo;
+                laserTransformComponent.Position = Utilities.RotatePoint(laserTransformComponent.Position,
+                    playerTransformComponent.Position, laserTransformComponent.Angle);
+                LaserTransformChanged?.Invoke(laserTransformComponent.Angle);
+            }
+        }
+    }
+
+    public void ResetVariables()
+    {
+        _numberOfShoots = Constants.NumberOfLaserShoots;
+        _coolDownTime = Constants.FloatZero;
     }
 }

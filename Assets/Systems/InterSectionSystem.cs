@@ -19,7 +19,7 @@ public class InterSectionSystem : ISystem
                 foreach (var otherEntity in EntityManager.Instance.GetAll())
                 {
                     var shootableComponent = ComponentManager.Instance
-                        .GetComponent<ShootableComponent>(otherEntity.EntityId);
+                        .GetComponent<BulletComponent>(otherEntity.EntityId);
                     var laserComponent = ComponentManager.Instance
                         .GetComponent<LaserComponent>(otherEntity.EntityId);
                     var playerComponent = ComponentManager.Instance
@@ -90,7 +90,7 @@ public class InterSectionSystem : ISystem
                             }
 
                             var chasableComponent =
-                                ComponentManager.Instance.GetComponent<ChasableComponent>(entity.EntityId);
+                                ComponentManager.Instance.GetComponent<ChasingComponent>(entity.EntityId);
 
                             var enemyDestructibleComponent =
                                 ComponentManager.Instance.GetComponent<DestructibleComponent>(entity.EntityId);

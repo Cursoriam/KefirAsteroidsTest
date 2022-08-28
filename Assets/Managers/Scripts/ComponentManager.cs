@@ -7,26 +7,27 @@ using UnityEngine;
 public class ComponentManager
 {
     private static ComponentManager _componentManager;
-
-    public static ComponentManager GetInstance()
+    
+    public static ComponentManager Instance
     {
-        if (_componentManager == null)
-            _componentManager = new ComponentManager();
-        return _componentManager;
+        get { return _componentManager ??= new ComponentManager(); }
     }
 
     public void AddComponent<T>(string entityId) where T: IComponent, new()
     {
-        EntityManager.GetInstance().GetEntity(entityId).AddComponent(new T());
+        EntityManager.Instance.GetEntity(entityId).AddComponent(new T());
     }
 
     public void RemoveComponent<T>(string entityId) where T: IComponent
     {
-        EntityManager.GetInstance().GetEntity(entityId).RemoveComponent<T>();
+        EntityManager.Instance.GetEntity(entityId).RemoveComponent<T>();
     }
 
     public T GetComponent<T>(string entityId) where T: IComponent
     {
-        return (T)EntityManager.GetInstance().GetEntity(entityId).GetComponent<T>();
+        var entity = EntityManager.Instance.GetEntity(entityId);
+        if(entity != null)
+            return (T)EntityManager.Instance.GetEntity(entityId).GetComponent<T>();
+        return default;
     }
 }

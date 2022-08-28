@@ -12,10 +12,10 @@ public class SystemEventManager
     {
         _eventDictionary = new Dictionary<string, Action>();
     }
-
-    public static SystemEventManager GetInstance()
+    
+    public static SystemEventManager Instance
     {
-        return _systemEventManager ??= new SystemEventManager();
+        get { return _systemEventManager ??= new SystemEventManager(); }
     }
 
     public void Subscribe(string eventName, Action listener)

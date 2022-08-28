@@ -8,12 +8,10 @@ public class EntityManager
 {
     private static EntityManager _entityManager;
     private Dictionary<string, Entity> _entities;
-
-    public static EntityManager GetInstance()
+    
+    public static EntityManager Instance
     {
-        if (_entityManager == null)
-            _entityManager = new EntityManager();
-        return _entityManager;
+        get { return _entityManager ??= new EntityManager(); }
     }
 
     private EntityManager()
@@ -33,10 +31,12 @@ public class EntityManager
 
     public Entity GetEntity(string entityId)
     {
-        return _entities[entityId];
+        if(_entities.ContainsKey(entityId))
+            return _entities[entityId];
+        return null;
     }
 
-    public IEnumerable<Entity> GetAllEntities()
+    public IEnumerable<Entity> GetAll()
     {
         List<Entity> entities = new List<Entity>();
         foreach (var entity in _entities)

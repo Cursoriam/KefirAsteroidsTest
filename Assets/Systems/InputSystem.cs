@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InputSystem : ISystem
@@ -10,13 +11,12 @@ public class InputSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var inputComponent = ComponentManager.Instance.GetComponent<InputComponent>(entity.EntityId);
-            if (inputComponent != null && Utilities.IsEmpty(inputComponent.Inputs))
+            var inputComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId);
+            if (inputComponent != null && !Utilities.IsEmpty(inputComponent.Inputs))
             {
-                foreach (var input in inputComponent.Inputs)
+                foreach (var input in inputComponent.Inputs.ToList())
                 {
                     SystemEventManager.Instance.Trigger(input);
-                    inputComponent.Inputs.Remove(input);
                 }
             }
         }
@@ -26,7 +26,8 @@ public class InputSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var inputComponent = ComponentManager.Instance.GetComponent<InputComponent>(entity.EntityId);
+            var inputComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId);
+            
             inputComponent?.Inputs.Add(input);
         }
     }

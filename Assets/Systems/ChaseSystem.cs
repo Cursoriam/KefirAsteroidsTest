@@ -10,7 +10,7 @@ public class ChaseSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var chasableComponent = ComponentManager.Instance.GetComponent<ChasableComponent>(entity.EntityId);
+            var chasableComponent = ComponentManager.Instance.GetComponent<ChasingComponent>(entity.EntityId);
             if (!(chasableComponent is {Target: { }})) continue;
             var transformComponent = ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId);
             var targetTransformComponent =
@@ -18,11 +18,11 @@ public class ChaseSystem : ISystem
 
             if (transformComponent == null || targetTransformComponent == null) continue;
             var roatationableComponent = ComponentManager.Instance
-                .GetComponent<RotationableComponent>(entity.EntityId);
+                .GetComponent<RotatingComponent>(entity.EntityId);
 
             if (roatationableComponent != null)
             {
-                roatationableComponent.rotationAngle = Utilities.RadiansToDegrees((float)Math.Atan2(
+                roatationableComponent.RotationAngle = Utilities.RadiansToDegrees((float)Math.Atan2(
                     targetTransformComponent.Position.Y - transformComponent.Position.Y, 
                     targetTransformComponent.Position.X - transformComponent.Position.X));
             }

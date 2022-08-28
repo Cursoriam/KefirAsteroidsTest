@@ -14,16 +14,21 @@ public class RotationSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            var rotationableComponent = ComponentManager.Instance.GetComponent<RotationableComponent>(entity.EntityId);
-            if (rotationableComponent == null) continue;
-            var inputComponent = ComponentManager.Instance.GetComponent<InputComponent>(entity.EntityId);
-            if (inputComponent == null ||
-                Utilities.ContainsInput(inputComponent.Inputs, Constants.AccelerateAction)) continue;
-            var transformComponent =
-                ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId);
-            if (transformComponent != null)
+            var rotatingComponent = ComponentManager.Instance.GetComponent<RotatingComponent>(entity.EntityId);
+            var playerComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entity.EntityId);
+            if (rotatingComponent != null && playerComponent != null)
             {
-                rotationableComponent.rotationAngle = transformComponent.Angle;
+                var transformComponent = ComponentManager.Instance.GetComponent<TransformComponent>(entity.EntityId);
+                if (transformComponent != null)
+                {
+                    if ((Utilities.ContainsInput(playerComponent.Inputs, Constants.RotateLeftAction) ||
+                        Utilities.ContainsInput(playerComponent.Inputs, Constants.RotateRightAction))
+                        && !Utilities.ContainsInput(playerComponent.Inputs, Constants.AccelerateAction))
+                    {
+                        continue;
+                    }
+                    rotatingComponent.RotationAngle = transformComponent.Angle;
+                }
             }
         }
     }
@@ -32,7 +37,7 @@ public class RotationSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            IncreaseAngle(entity.EntityId, -Constants.RotationSpeed);
+            IncreaseAngle(entity.EntityId, Constants.RotationSpeed);
         }
     }
 
@@ -41,18 +46,17 @@ public class RotationSystem : ISystem
     {
         foreach (var entity in EntityManager.Instance.GetAll())
         {
-            IncreaseAngle(entity.EntityId, Constants.RotationSpeed);
+            IncreaseAngle(entity.EntityId, -Constants.RotationSpeed);
         }
     }
 
     private void IncreaseAngle(string entityId, float angle)
     {
-        var rotationableComponent = ComponentManager.Instance.GetComponent<RotationableComponent>(entityId);
-        if (rotationableComponent == null) return;
+        var rotatingComponent = ComponentManager.Instance.GetComponent<RotatingComponent>(entityId);
+        var playerComponent = ComponentManager.Instance.GetComponent<PlayerComponent>(entityId);
+        if (rotatingComponent == null || playerComponent == null) return;
         var transformComponent = ComponentManager.Instance.GetComponent<TransformComponent>(entityId);
-        if (transformComponent != null)
-        {
-            transformComponent.Angle += angle;
-        }
+        transformComponent.Angle += angle;
+        transformComponent.Angle %= (float)(Constants.FloatTwo * Constants.PIInDegrees);
     }
 }

@@ -11,7 +11,7 @@ public class EnemySpawnSystem : ISystem
     private float _ufoTimeElapsed;
     public Action<string> BigAsteroidCreated;
     public Action<string, Coordinates2D> LittleAsteroidCreated;
-    public Action UfoCreated;
+    public Action<Coordinates2D> UfoCreated;
     
     // Update is called once per frame
     public void Update()
@@ -35,7 +35,7 @@ public class EnemySpawnSystem : ISystem
                                                          projectileTransformComponent.Size.X / Constants.FloatTwo,
                     transformComponent.Position.Y - projectileTransformComponent.Size.Y / Constants.FloatTwo);
                 CreateLittleAsteroid(firstSpawnPoint);
-                CreateLittleAsteroid(secondSpawnPoint );
+                CreateLittleAsteroid(secondSpawnPoint);
             }
 
             if (playerComponent != null)
@@ -61,9 +61,15 @@ public class EnemySpawnSystem : ISystem
         if (_ufoTimeElapsed <= Constants.CoolDownBetweenUfoSpawn) return;
         if (!UFOIsOnScene())
         {
-            EntityManager.Instance.CreateEntity<UFOEntity>(Constants.UfoEntityName);
+            EntityManager.Instance.CreateEntity<UfoEntity>(Constants.UfoEntityName);
             SetPosition(EntityManager.Instance.GetEntity(Constants.UfoEntityName));
-            UfoCreated?.Invoke();
+
+            var ufoTransformComponent =
+                ComponentManager.Instance.GetComponent<TransformComponent>(Constants.UfoEntityName);
+            if (ufoTransformComponent != null)
+            {
+                UfoCreated?.Invoke(ufoTransformComponent.Position);
+            }
         }
 
         _ufoTimeElapsed = Constants.FloatZero;
@@ -76,7 +82,7 @@ public class EnemySpawnSystem : ISystem
     
     private bool UFOIsOnScene()
     {
-        return EntityManager.Instance.GetAll().OfType<UFOEntity>().Any();
+        return EntityManager.Instance.GetAll().OfType<UfoEntity>().Any();
     }
 
     private void SetPosition(Entity entity)
@@ -101,7 +107,7 @@ public class EnemySpawnSystem : ISystem
         return totalAsteroidsNumber + 1;
     }
 
-    private void CreateBigAsteroid()
+    public void CreateBigAsteroid()
     {
         var newAsteroidName = Constants.AsteroidEntityName + CalculateNumberToCreateAsteroid();
         EntityManager.Instance.CreateEntity<BigAsteroidEntity>(newAsteroidName);
@@ -121,5 +127,11 @@ public class EnemySpawnSystem : ISystem
             transformComponent.Position = position;
         }
         LittleAsteroidCreated?.Invoke(newAsteroidName, position);
+    }
+
+    public void ResetVariables()
+    {
+        _asteroidsTimeElapsed = Constants.FloatZero; 
+        _ufoTimeElapsed = Constants.FloatZero; 
     }
 }
